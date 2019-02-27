@@ -7,7 +7,7 @@ alias config='/usr/bin/git --git-dir=$HOME/.dotfiles-config/ --work-tree=$HOME'
 # Make backup folder for already-present config files
 mkdir -p .dotfiles-config-backup && \
 config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | \
-xargs -I{} mv {} .dotfiles-config-backup/{}
+xargs -I{} sh -c 'mkdir --parents .dotfiles-config-backup/$(dirname {}) && mv {} .dotfiles-config-backup/{}'
 
 # Check out config files from $HOME/.config into $HOME 
 config checkout
