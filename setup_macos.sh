@@ -44,19 +44,18 @@ install_homebrew() {
 
 install_dialog() {
 	echo "Now installing 'dialog' to present you with better messages"
-	sudo -u $user /home/dan/Software/homebrew/bin/brew install dialog || error 65 "Error with dialog installation"
+	sudo -u $user brew install dialog || error 65 "Error with dialog installation"
 }
 
 install_progs() {
 	progsfile="https://danleonard.us/scripts/setup_macos_progs.csv"
 	curl -LS "$progsfile" | sed '/^#/d' > /tmp/setup_macos_progs.csv
 	total=$(wc -l < /tmp/setup_macos_progs.csv)
-	installed=$(brew list | awk '{print $1}')
 
 	while IFS=, read -r program comment; do
 		n=$((n+1))
 		dialog --title "Dan's macOS Installer" --infobox "Installing \`$(basename $program)\` ($n of $total). $program $comment" 5 70
-		sudo -u $user /home/dan/Software/homebrew/bin/brew install $program >/dev/null 2>&1 || error 65 "$program not installed"
+		sudo -u $user brew install $program || error 65 "$program not installed"
 	done < /tmp/setup_macos_progs.csv
 }
 
@@ -79,7 +78,7 @@ change_shell() {
 
 dotfiles() {
 	usr_home=$(grep $user /etc/passwd | cut -d":" -f6)
-	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; exit; }
+	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; return; }
 
 	# Bash settings
 	echo "export PS1=\"\\[\$(tput bold)\\]\\[\$(tput setaf 1)\\][\\[\$(tput setaf 3)\\]\\u\\[\$(tput setaf 2)\\]@\\[\$(tput setaf 4)\\]\\h \\[\$(tput setaf 5)\\]\\W\\[\$(tput setaf 1)\\]]\\[\$(tput setaf 7)\\]\\\\\$ \\[\$(tput sgr0)\\]\"" >> $usr_home/.bash_profile
@@ -97,12 +96,12 @@ dotfiles() {
 }
 
 closing() {
-	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up. To finish configuring the fish shell, run it and type fish_config. The shells bash and zsh should have some light configuration already.\\n\\nAliases for 'ls' have been added. Try commands 'l' 'la' and 'lr'.\\n\\nDan" 12 80
+	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up. To finish configuring the fish shell, run it and type fish_config. The shells bash and zsh should have some light configuration already.\\n\\nAliases for 'ls' have been added. Try commands 'l' 'la' and 'lr'.\\n\\n ~ Dan" 12 80
 }
 
 welcomemsg
 whoareyou
-#install_homebrew
+install_homebrew
 install_dialog
 install_progs
 change_shell
