@@ -102,7 +102,7 @@ closing() {
 
 welcomemsg
 whoareyou
-install_homebrew
+#install_homebrew
 install_dialog
 install_progs
 change_shell
