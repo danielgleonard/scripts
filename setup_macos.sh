@@ -55,7 +55,7 @@ install_progs() {
 	while IFS=, read -r program comment; do
 		n=$((n+1))
 		dialog --title "Dan's macOS Installer" --infobox "Installing \`$(basename $program)\` ($n of $total). $program $comment" 5 70
-		sudo -u $user brew install $program || error 65 "$program not installed"
+		sudo -u $user brew install $program >/dev/null 2>&1 || error 65 "$program not installed"
 	done < /tmp/setup_macos_progs.csv
 }
 
