@@ -2,7 +2,7 @@
 ffmpeg,"can record and splice video and audio on the command line."
 w3m,"is a terminal browser"
 youtube-dl,"can download any YouTube video (or playlist or channel) when given the link."
-macvim,"the ubiquitous text editor, made for macOS"
+vim,"the ubiquitous text editor"
 zsh,"is a bourne-compatible shell with extra features and easy to customize"
 fish,"is a modern shell that provides autocompletion but is not backwards-compatible with the bourne shell"
 neofetch,"displays the status of your machine"
