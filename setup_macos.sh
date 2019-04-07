@@ -77,7 +77,7 @@ change_shell() {
 }
 
 dotfiles() {
-	usr_home=$(grep $user /etc/passwd | cut -d":" -f6)
+	usr_home=$(echo -n ~$user)
 	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; return; }
 
 	# Bash settings
