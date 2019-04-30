@@ -60,18 +60,19 @@ install_progs() {
 }
 
 change_shell() {
-	chsh -l | grep "zsh" || echo "/usr/local/bin/zsh">>/etc/shells
-	chsh -l | grep "fish" || echo "/usr/local/bin/fish">>/etc/shells
+	grep "zsh"  /etc/shells || echo "/usr/local/bin/zsh">>/etc/shells
+	grep "fish" /etc/shells || echo "/usr/local/bin/fish">>/etc/shells
+
 	shell_choice=$(dialog --title "Change your shell" --menu "Choose one of the installed shells" 10 75 3 bash "The Bourne-Again Shell, everyone's got it" zsh "The Z Shell, backwards-compatable with the Bourne shell" fish "The Friendly Interactive Shell, which comes with autocomplete" 2>&1 >/dev/tty)
 	case $shell_choice in
 		"bash")
-			chsh -s "$(chsh -l | grep -m 1 -Z bash)" $user
+			chsh -s "$(grep -m 1 -Z bash /etc/shells)" $user
 			;;
 		"zsh")
-			chsh -s "$(chsh -l | grep -m 1 -Z zsh)" $user
+			chsh -s "$(grep -m 1 -Z zsh  /etc/shells)" $user
 			;;
 		"fish")
-			chsh -s "$(chsh -l | grep -m 1 -Z fish)" $user
+			chsh -s "$(grep -m 1 -Z fish /etc/shells)" $user
 			;;
 	esac
 }
@@ -109,4 +110,4 @@ dotfiles
 closing
 
 clear
-neofetch
+sudo -u $user neofetch
