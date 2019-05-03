@@ -63,7 +63,7 @@ change_shell() {
 	grep "zsh"  /etc/shells || echo "/usr/local/bin/zsh">>/etc/shells
 	grep "fish" /etc/shells || echo "/usr/local/bin/fish">>/etc/shells
 
-	shell_choice=$(dialog --title "Change your shell" --menu "Choose one of the installed shells" 10 75 3 bash "The Bourne-Again Shell, everyone's got it" zsh "The Z Shell, backwards-compatable with the Bourne shell" fish "The Friendly Interactive Shell, which comes with autocomplete" 2>&1 >/dev/tty)
+	shell_choice=$(dialog --title "Change your shell" --menu "Choose one of the installed shells (I can't recommend 'fish' enough)" 10 75 3 bash "The Bourne-Again Shell, everyone's got it" zsh "The Z Shell, backwards-compatable with the Bourne shell" fish "The Friendly Interactive Shell, which comes with autocomplete" 2>&1 >/dev/tty)
 	case $shell_choice in
 		"bash")
 			chsh -s "$(grep -m 1 -Z bash /etc/shells)" $user
@@ -81,25 +81,26 @@ dotfiles() {
 	usr_home=$(eval echo -n ~$user)
 	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; return; }
 
-	# Oh my zsh
-	sudo -u $user sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" || error 65 "Error with oh-my-zsh installation"
+	# grml-zsh-config
+	curl -o $usr_home/.zshrc -fsSL https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc || error 65 "Error curling .zshrc"
 
 	# Oh my fish
-	sudo -u $user fish -c "$(curl -fsSL https://get.oh-my.fish)" || error 65 "Error with oh-my-fish installation"
+	sudo -u $user fish -c "$(curl -fsSL https://get.oh-my.fish) >/dev/null 2>&1" || error 65 "Error with oh-my-fish installation"
 
 	# Bash settings
 	echo "export PS1=\"\\[\$(tput bold)\\]\\[\$(tput setaf 1)\\][\\[\$(tput setaf 3)\\]\\\u\\[\$(tput setaf 2)\\]@\\[\$(tput setaf 4)\\]\\h \\[\$(tput setaf 5)\\]\\W\\[\$(tput setaf 1)\\]]\\[\$(tput setaf 7)\\]\\\\\\$ \\[\$(tput sgr0)\\]\"" >> $usr_home/.bash_profile
-	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.profile
+	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.bash_profile
 
 	# Fish settings
+	sudo -u $user fish -c "omf install plain >/dev/null 2>&1" || error 65 "Error installing fish \'plain\' theme"
 	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.config/fish/config.fish
 
 	# Aliases
-	printf "alias l=\"ls -lFh --color=auto\"\t#size,show type,human readable\nalias ll=\"ls -lFh - --color=auto\"\t#size,show type,human readable\nalias ls=\"ls --color=auto\"\nalias la=\"ls -lAFh --color=auto\"\t#long list,show almost all,show type,human readable\nalias lr=\"ls -tRFh --color=auto\"\t#sorted by date,recursive,show type,human readable\nalias grep=\"grep --color=auto\"\nalias hgrep=\"fc -El 0 | grep\"\t#Grep history\nalias diff=\"diff --color=auto\"\n" >> $usr_home/.config/aliases.sh
+	printf "alias grep=\"grep --color=auto\"\nalias hgrep=\"fc -El 0 | grep\"\t#Grep history\nalias diff=\"diff --color=auto\"\n" >> $usr_home/.config/aliases.sh
 }
 
 closing() {
-	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up. To finish configuring the fish shell, run it and type fish_config. The shells bash and zsh should have some light configuration already.\\n\\nAliases for 'ls' have been added. Try commands 'l' 'la' and 'lr'.\\n\\n ~ Dan" 12 80
+	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up.\\nbash:\\n  • small prompt change in ~/.bash_profile\\n  • some aliases added\\nzsh:\\n  • copied well-liked config file to ~/.zshrc\\n  • check out aliases for 'l','ll', and more\\nfish:\\n  • installed customization tool 'oh-my-fish'\\n  • check out 'omf --help'\\n\\n ~ Dan" 17 60
 }
 
 welcomemsg
