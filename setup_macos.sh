@@ -82,21 +82,21 @@ dotfiles() {
 	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; return; }
 
 	# grml-zsh-config
-	curl -o $usr_home/.zshrc -fsSL https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc || error 65 "Error curling .zshrc"
+	sudo -u $user curl -o $usr_home/.zshrc -fsSL https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc || error 65 "Error curling .zshrc"
 
 	# Oh my fish
 	sudo -u $user fish -c "$(curl -fsSL https://get.oh-my.fish) >/dev/null 2>&1" || error 65 "Error with oh-my-fish installation"
 
 	# Bash settings
-	echo "export PS1=\"\\[\$(tput bold)\\]\\[\$(tput setaf 1)\\][\\[\$(tput setaf 3)\\]\\\u\\[\$(tput setaf 2)\\]@\\[\$(tput setaf 4)\\]\\h \\[\$(tput setaf 5)\\]\\W\\[\$(tput setaf 1)\\]]\\[\$(tput setaf 7)\\]\\\\\\$ \\[\$(tput sgr0)\\]\"" >> $usr_home/.bash_profile
-	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.bash_profile
+	sudo -u $user echo "export PS1=\"\\[\$(tput bold)\\]\\[\$(tput setaf 1)\\][\\[\$(tput setaf 3)\\]\\\u\\[\$(tput setaf 2)\\]@\\[\$(tput setaf 4)\\]\\h \\[\$(tput setaf 5)\\]\\W\\[\$(tput setaf 1)\\]]\\[\$(tput setaf 7)\\]\\\\\\$ \\[\$(tput sgr0)\\]\"" >> $usr_home/.bash_profile
+	sudo -u $user printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.bash_profile
 
 	# Fish settings
-	sudo -u $user fish -c "omf install plain >/dev/null 2>&1" || error 65 "Error installing fish \'plain\' theme"
-	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.config/fish/config.fish
+	#sudo -u $user fish -c "omf install plain >/dev/null 2>&1" || error 65 "Error installing fish \'plain\' theme"
+	sudo -u $user printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.config/fish/config.fish
 
 	# Aliases
-	printf "alias grep=\"grep --color=auto\"\nalias hgrep=\"fc -El 0 | grep\"\t#Grep history\nalias diff=\"diff --color=auto\"\n" >> $usr_home/.config/aliases.sh
+	sudo -u $user printf "alias grep=\"grep --color=auto\"\nalias hgrep=\"fc -El 0 | grep\"\t#Grep history\nalias diff=\"diff --color=auto\"\n" >> $usr_home/.config/aliases.sh
 }
 
 closing() {
