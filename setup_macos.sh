@@ -81,13 +81,15 @@ dotfiles() {
 	usr_home=$(eval echo -n ~$user)
 	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; return; }
 
+	# Oh my zsh
+	sudo -u $user sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" || error 65 "Error with oh-my-zsh installation"
+
+	# Oh my fish
+	sudo -u $user fish -c "$(curl -fsSL https://get.oh-my.fish)" || error 65 "Error with oh-my-fish installation"
+
 	# Bash settings
 	echo "export PS1=\"\\[\$(tput bold)\\]\\[\$(tput setaf 1)\\][\\[\$(tput setaf 3)\\]\\\u\\[\$(tput setaf 2)\\]@\\[\$(tput setaf 4)\\]\\h \\[\$(tput setaf 5)\\]\\W\\[\$(tput setaf 1)\\]]\\[\$(tput setaf 7)\\]\\\\\\$ \\[\$(tput sgr0)\\]\"" >> $usr_home/.bash_profile
-	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.bash_profile
-
-	# Zsh settings
-	echo "PROMPT=\"%{\$(tput bold)%}%{\$(tput setaf 1)%}[%{\$(tput setaf 3)%}%n%{\$(tput setaf 2)%}@%{\$(tput setaf 4)%}%m %{\$(tput setaf 5)%}%~%{\$(tput setaf 1)%}]\${ret_status}%{\$(tput setaf 7)%}\$ %{\$(tput sgr0)%}\"" >> $usr_home/.zshrc
-	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.zshrc
+	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.profile
 
 	# Fish settings
 	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.config/fish/config.fish
