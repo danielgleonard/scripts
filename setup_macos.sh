@@ -66,7 +66,7 @@ install_progs() {
 }
 
 change_shell() {
-	chsh -l | grep "fish" || echo "/usr/local/bin/fish" >> /etc/shells
+	grep "fish" /etc/shells || echo "/usr/local/bin/fish">>/etc/shells
 
 	shell_choice=$(dialog --title "Change your shell" --menu "Choose one of the installed shells (I highly reccommend choosing fish)" 12 75 5 sh "the OG, the one that started it all, the Bourne shell" bash "The Bourne-Again Shell, everyone's got it" zsh "The Z Shell, bash-like with some improvements" fish "The Friendly Interactive Shell, autocompletes and fun to use" tcsh "improved C shell, only BSD/macOS weirdos use it" 2>&1 >/dev/tty)
 	case $shell_choice in
@@ -91,26 +91,29 @@ change_shell() {
 }
 
 dotfiles() {
-	usr_home=$(echo -n ~$user)
+	usr_home=$(eval echo -n ~$user)
 	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; return; }
 
-	# Bash settings
-	echo "export PS1=\"\\[\$(tput bold)\\]\\[\$(tput setaf 1)\\][\\[\$(tput setaf 3)\\]\\u\\[\$(tput setaf 2)\\]@\\[\$(tput setaf 4)\\]\\h \\[\$(tput setaf 5)\\]\\W\\[\$(tput setaf 1)\\]]\\[\$(tput setaf 7)\\]\\\\\$ \\[\$(tput sgr0)\\]\"" >> $usr_home/.bash_profile
-	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.bash_profile
+	# grml-zsh-config
+	sudo -u $user curl -o $usr_home/.zshrc -fsSL https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc || error 65 "Error curling .zshrc"
 
-	# Zsh settings
-	echo "PROMPT=\"%{\$(tput bold)%}%{\$(tput setaf 1)%}[%{\$(tput setaf 3)%}%n%{\$(tput setaf 2)%}@%{\$(tput setaf 4)%}%m %{\$(tput setaf 5)%}%~%{\$(tput setaf 1)%}]\${ret_status}%{\$(tput setaf 7)%}\$ %{\$(tput sgr0)%}\"" >> $usr_home/.zshrc
-	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.zshrc
+	# Oh my fish
+	sudo -u $user fish -c "$(curl -fsSL https://get.oh-my.fish) --noninteractive --yes >/dev/null 2>&1" || error 65 "Error with oh-my-fish installation"
+
+	# Bash settings
+	sudo -u $user echo "export PS1=\"\\[\$(tput bold)\\]\\[\$(tput setaf 1)\\][\\[\$(tput setaf 3)\\]\\\u\\[\$(tput setaf 2)\\]@\\[\$(tput setaf 4)\\]\\h \\[\$(tput setaf 5)\\]\\W\\[\$(tput setaf 1)\\]]\\[\$(tput setaf 7)\\]\\\\\\$ \\[\$(tput sgr0)\\]\"" >> $usr_home/.bash_profile
+	sudo -u $user printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.bash_profile
 
 	# Fish settings
-	printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.config/fish/config.fish
+	sudo -u $user fish -c "omf install plain >/dev/null 2>&1" || error 65 "Error installing fish \'plain\' theme"
+	sudo -u $user printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.config/fish/config.fish
 
 	# Aliases
-	printf "alias l=\"ls -lFh --color=auto\"\t#size,show type,human readable\nalias ll=\"ls -lFh - --color=auto\"\t#size,show type,human readable\nalias ls=\"ls --color=auto\"\nalias la=\"ls -lAFh --color=auto\"\t#long list,show almost all,show type,human readable\nalias lr=\"ls -tRFh --color=auto\"\t#sorted by date,recursive,show type,human readable\nalias grep=\"grep --color=auto\"\nalias hgrep=\"fc -El 0 | grep\"\t#Grep history\nalias diff=\"diff --color=auto\"\n" >> $usr_home/.config/aliases.sh
+	sudo -u $user printf "alias grep=\"grep --color=auto\"\nalias hgrep=\"fc -El 0 | grep\"\t#Grep history\nalias diff=\"diff --color=auto\"\n" >> $usr_home/.config/aliases.sh
 }
 
 closing() {
-	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up. To finish configuring the fish shell, run it and type fish_config. The shells bash and zsh should have some light configuration already.\\n\\nAliases for 'ls' have been added. Try commands 'l' 'la' and 'lr'.\\n\\n ~ Dan" 12 80
+	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up.\\nbash:\\n  • small prompt change in ~/.bash_profile\\n  • some aliases added\\nzsh:\\n  • copied well-liked config file to ~/.zshrc\\n  • check out aliases for 'l','ll', and more\\nfish:\\n  • installed customization tool 'oh-my-fish'\\n  • check out 'omf --help'\\n\\n ~ Dan" 17 60
 }
 
 welcomemsg
@@ -123,4 +126,4 @@ dotfiles
 closing
 
 clear
-neofetch
+sudo -u $user neofetch
