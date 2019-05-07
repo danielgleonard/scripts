@@ -49,31 +49,45 @@ install_dialog() {
 
 install_progs() {
 	progsfile="https://danleonard.us/scripts/setup_macos_progs.csv"
+
+	# Read all non-commented lines from progsfile (comment being a hash)
 	curl -LS "$progsfile" | sed '/^#/d' > /tmp/setup_macos_progs.csv
+
+	# Count the total number of programs to install
 	total=$(wc -l < /tmp/setup_macos_progs.csv)
 
 	while IFS=, read -r program comment; do
 		n=$((n+1))
 		dialog --title "Dan's macOS Installer" --infobox "Installing \`$(basename $program)\` ($n of $total). $program $comment" 5 70
+
+		# Install the program with homebrew
 		sudo -u $user brew install $program >/dev/null 2>&1 || error 65 "$program not installed"
 	done < /tmp/setup_macos_progs.csv
 }
 
 change_shell() {
-	chsh -l | grep "zsh" || echo "/usr/local/bin/zsh">>/etc/shells
-	chsh -l | grep "fish" || echo "/usr/local/bin/fish">>/etc/shells
-	shell_choice=$(dialog --title "Change your shell" --menu "Choose one of the installed shells" 10 75 3 bash "The Bourne-Again Shell, everyone's got it" zsh "The Z Shell, backwards-compatable with the Bourne shell" fish "The Friendly Interactive Shell, which comes with autocomplete" 2>&1 >/dev/tty)
+	chsh -l | grep "fish" || echo "/usr/local/bin/fish" >> /etc/shells
+
+	shell_choice=$(dialog --title "Change your shell" --menu "Choose one of the installed shells (I highly reccommend choosing fish)" 12 75 5 sh "the OG, the one that started it all, the Bourne shell" bash "The Bourne-Again Shell, everyone's got it" zsh "The Z Shell, bash-like with some improvements" fish "The Friendly Interactive Shell, autocompletes and fun to use" tcsh "improved C shell, only BSD/macOS weirdos use it" 2>&1 >/dev/tty)
 	case $shell_choice in
+		"sh")
+			chsh -s "$(grep -m 1 -Z /sh /etc/shells)" $user
+			;;
 		"bash")
-			chsh -s "$(chsh -l | grep -m 1 -Z bash)" $user
+			chsh -s "$(grep -m 1 -Z /bash /etc/shells)" $user
 			;;
 		"zsh")
-			chsh -s "$(chsh -l | grep -m 1 -Z zsh)" $user
+			chsh -s "$(grep -m 1 -Z /zsh /etc/shells)" $user
 			;;
 		"fish")
-			chsh -s "$(chsh -l | grep -m 1 -Z fish)" $user
+			chsh -s "$(grep -m 1 -Z /fish /etc/shells)" $user
+			;;
+		"tcsh")
+			chsh -s "$(grep -m 1 -Z /tcsh /etc/shells)" $user
 			;;
 	esac
+
+	dialog --title "Quirk Notice" --msgbox -- "Your preference may not be immediately accessible. Press COMMAND + , now and ensure your terminal emulator is set to \"use default shell\".\nbtw guys who suck dicks also love to download iTerm3 in place of terminal.app but that's not strictly necessary." 10 60
 }
 
 dotfiles() {
