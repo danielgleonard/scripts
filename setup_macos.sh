@@ -92,28 +92,35 @@ change_shell() {
 
 dotfiles() {
 	usr_home=$(eval echo -n ~$user)
-	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; return; }
+#	dialog --title "Configuration" --yes-label "Sounds good" --no-label "I'll go in nude" --yesno "This script can also install configuration files for your shell if you don't already have them" 10 40 || { clear; return; }
 
 	# grml-zsh-config
+	dialog --title "Configuring shells (1 of 5)" --msgbox "Downloading grml-zsh-config, a popular .zshrc file" 6 60
 	sudo -u $user curl -o $usr_home/.zshrc -fsSL https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc || error 65 "Error curling .zshrc"
 
 	# Oh my fish
+	dialog --title "Configuring shells (2 of 5)" --msgbox "Installing oh-my-fish, an automated configuration tool for the fish shell. Run 'omf' in fish to check it out" 6 60
 	sudo -u $user fish -c "$(curl -fsSL https://get.oh-my.fish) --noninteractive --yes >/dev/null 2>&1" || error 65 "Error with oh-my-fish installation"
 
 	# Bash settings
+	dialog --title "Configuring shells (3 of 5)" --msgbox "Adding colors to the bare bash prompt" 6 60
 	sudo -u $user echo "export PS1=\"\\[\$(tput bold)\\]\\[\$(tput setaf 1)\\][\\[\$(tput setaf 3)\\]\\\u\\[\$(tput setaf 2)\\]@\\[\$(tput setaf 4)\\]\\h \\[\$(tput setaf 5)\\]\\W\\[\$(tput setaf 1)\\]]\\[\$(tput setaf 7)\\]\\\\\\$ \\[\$(tput sgr0)\\]\"" >> $usr_home/.bash_profile
 	sudo -u $user printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.bash_profile
 
 	# Fish settings
+	dialog --title "Configuring shells (4 of 5)" --msgbox "Setting prompt for fish shell" 6 60
 	sudo -u $user fish -c "omf install plain >/dev/null 2>&1" || error 65 "Error installing fish \'plain\' theme"
 	sudo -u $user printf "\n#Aliases\nsource \$HOME/.config/aliases.sh" >> $usr_home/.config/fish/config.fish
 
 	# Aliases
+	dialog --title "Configuring shells (5 of 5)" --msgbox "Setting basic aliases for colorful grep and diff in bash and fish" 6 60
 	sudo -u $user printf "alias grep=\"grep --color=auto\"\nalias hgrep=\"fc -El 0 | grep\"\t#Grep history\nalias diff=\"diff --color=auto\"\n" >> $usr_home/.config/aliases.sh
+
+	dialog --title "Shell configurations" --msgbox "bash:\\n  • small prompt change in ~/.bash_profile\\n  • some aliases added\\n\\nzsh:\\n  • copied famed config file to ~/.zshrc\\n  • check out aliases for 'l','ll', and more\\n\\nfish:\\n  • installed customization tool 'oh-my-fish'\\n  • check out 'omf --help'" 17 60
 }
 
 closing() {
-	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up.\\nbash:\\n  • small prompt change in ~/.bash_profile\\n  • some aliases added\\nzsh:\\n  • copied well-liked config file to ~/.zshrc\\n  • check out aliases for 'l','ll', and more\\nfish:\\n  • installed customization tool 'oh-my-fish'\\n  • check out 'omf --help'\\n\\n ~ Dan" 17 60
+	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up.\\n\\n~ Dan" 8 60
 }
 
 welcomemsg
