@@ -1,8 +1,10 @@
 #NAME IN REPO,PURPOSE
-#ffmpeg,can record and splice video and audio on the command line.
-w3m,is a terminal web browser
-youtube-dl,can do more than its name implies
+#ffmpeg,which can record and splice video and audio on the command line.
+#w3m,a terminal web browser
+youtube-dl,which can do more than its name implies
 #vim,the ubiquitous text editor
-#zsh,is a bourne-compatible shell with extra features and easy to customize
-fish,is a modern shell that provides autocompletion but is not backwards-compatible with the bourne shell
-neofetch,displays the status of your machine
+#zsh,a bourne-compatible shell with extra features and easy to customize
+fish,a modern shell that provides autocompletion but is not backwards-compatible with the bourne shell
+speedtest-cli,which lets you run network speed tests from the command line
+jq,"like sed for JSON data"
+neofetch,which displays the status of your machine
