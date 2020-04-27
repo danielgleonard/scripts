@@ -37,22 +37,23 @@ closing() {
 rewrite() {
     dialog --title "Rewriting files" --infobox "Changing the file ‘$1’"
     sed -i "s/$DIST_OLD/$DIST_NEW/g" "$1" || error $? "Error rewriting $1"
+    sleep 2
 }
 
 update() {
     rewrite '/etc/apt/sources.list'
     rewrite '/etc/apt/sources.list.d/raspi.list'
     dialog --title "Apt updating" --infobox "Running apt updating commands." 8 60
-    apt-get remove apt-listchanges -y >/dev/null 2>&1 || error $? "Error removing apt-listchanges"
-    sudo apt update -y >/dev/null 2>&1 || error $? "Error running apt update"
-    sudo apt dist-upgrade -y >/dev/null 2>&1 || error $? "Error running apt dist-upgrade"
+    apt-get -qy remove apt-listchanges >/dev/null 2>&1 || error $? "Error removing apt-listchanges"
+    apt -qy update >/dev/null 2>&1 || error $? "Error running apt update"
+    apt -qy dist-upgrade >/dev/null 2>&1 || error $? "Error running apt dist-upgrade"
 }
 
 remove_bad() {
     dialog --title "Purging" --infobox "Removing packages that should be removed"
-    apt purge -y timidity lxmusic gnome-disk-utility deluge-gtk evince wicd wicd-gtk clipit usermode gucharmap gnome-system-tools pavucontrol >/dev/null 2>&1 || error $? "Error purging"
-    apt autoremove -y >/dev/null 2>&1 || error $? "Error running autoremove"
-    apt autoclean -y >/dev/null 2>&1 || error $? "Error running autoclean"
+    apt -qy purge timidity lxmusic gnome-disk-utility deluge-gtk evince wicd wicd-gtk clipit usermode gucharmap gnome-system-tools pavucontrol >/dev/null 2>&1 || error $? "Error purging"
+    apt -qy autoremove >/dev/null 2>&1 || error $? "Error running autoremove"
+    apt -qy autoclean >/dev/null 2>&1 || error $? "Error running autoclean"
 }
 
 # the actual code
