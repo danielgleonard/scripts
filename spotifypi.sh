@@ -33,8 +33,8 @@ whoareyou() {
 
 install_dialog() {
 	echo "Now installing 'dialog' to present you with better messages"
-	apt update || error $? "Error updating apt"
-	apt -y -u install dialog || error $? "Error with dialog installation"
+	apt update >/dev/null 2>&1 || error $? "Error updating apt"
+	apt -y -u install dialog >/dev/null 2>&1 || error $? "Error with dialog installation"
 }
 
 closing() {
@@ -43,19 +43,19 @@ closing() {
 
 install () {
 	dialog --title "Installing ‘$1’" --infobox "The package ‘$1’ $2" 8 60
-	aptitude -y install "$1" >/dev/null 2&>1 || error $? "Error installing $1"
+	aptitude -y install "$1" >/dev/null 2>&1 || error $? "Error installing $1"
 }
 
 install_mopidy_repo() {
 	dialog --title "Repository configuration" --infobox "Setting up an APT repository for ‘mopidy’ packages" 8 60
-	wget -q -O - https://apt.mopidy.com/mopidy.gpg | apt-key add - || error $? "Error adding mopidy GPG key"
-	wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list || error $? "Error adding mopidy repository to apt"
-	apt update || error $? "Error updating apt"
+	wget -q -O - https://apt.mopidy.com/mopidy.gpg | apt-key add - >/dev/null 2>&1 || error $? "Error adding mopidy GPG key"
+	wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list >/dev/null 2>&1 || error $? "Error adding mopidy repository to apt"
+	apt update >/dev/null 2>&1 || error $? "Error updating apt"
 }
 
 usermod() {
 	dialog --title "Adding user ‘mopidy’" --infobox "This allows the music to be partitioned into a separate user with its own permissions. It will be added to group ‘video’ to allow use of HDMI audio." 8 60
-	adduser mopidy video || error $? "Error adding user ‘mopidy’"
+	adduser mopidy video >/dev/null 2>&1 || error $? "Error adding user ‘mopidy’"
 }
 
 install_packages() {
