@@ -10,7 +10,7 @@ error() { printf "ERROR:\\n%s\\n" "$2"; exit $1;}
 
 welcomemsg() { \
 	echo "Welcome to Dan's setup script for Spotify on Linux."
-    echo "This will install basic software for using the terminal."
+	echo "This will install basic software for using the terminal."
 	while true; do
 		read -p "Shall we begin? (y/n) " yn
 		case $yn in
@@ -33,7 +33,7 @@ whoareyou() {
 
 install_dialog() {
 	echo "Now installing 'dialog' to present you with better messages"
-    apt update || error $? "Error updating apt"
+	apt update || error $? "Error updating apt"
 	apt -y -u install dialog || error $? "Error with dialog installation"
 }
 
@@ -42,8 +42,8 @@ closing() {
 }
 
 install () {
-    dialog --title "Installing ‘$1’" --msgbox "The package ‘$1’ $2" 8 60
-    apt -y -u install "$1"
+	dialog --title "Installing ‘$1’" --msgbox "The package ‘$1’ $2" 8 60
+	apt -y -u install "$1"
 }
 
 install_mopidy_repo() {
