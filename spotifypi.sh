@@ -10,7 +10,7 @@ error() { printf "ERROR:\\n%s\\n" "$2"; exit $1;}
 
 welcomemsg() { \
 	echo "Welcome to Dan's setup script for Spotify on Linux."
-	echo "This will install basic software for using the terminal."
+	echo "This will install a Spotify streaming server on this device."
 	while true; do
 		read -p "Shall we begin? (y/n) " yn
 		case $yn in
@@ -42,19 +42,19 @@ closing() {
 }
 
 install () {
-	dialog --title "Installing ‘$1’" --msgbox "The package ‘$1’ $2" 8 60
-	apt -y -u install "$1"
+	dialog --title "Installing ‘$1’" --infobox "The package ‘$1’ $2" 8 60
+	aptitude -y install "$1" >/dev/null 2&>1 || error $? "Error installing $1"
 }
 
 install_mopidy_repo() {
-	dialog --title "Repository configuration" --msgbox "Setting up an APT repository for ‘mopidy’ packages" 8 60
+	dialog --title "Repository configuration" --infobox "Setting up an APT repository for ‘mopidy’ packages" 8 60
 	wget -q -O - https://apt.mopidy.com/mopidy.gpg | apt-key add - || error $? "Error adding mopidy GPG key"
 	wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buster.list || error $? "Error adding mopidy repository to apt"
 	apt update || error $? "Error updating apt"
 }
 
 usermod() {
-	dialog --title "Adding user ‘mopidy’" --msgbox "This allows the music to be partitioned into a separate user with its own permissions. It will be added to group ‘video’ to allow use of HDMI audio." 8 60
+	dialog --title "Adding user ‘mopidy’" --infobox "This allows the music to be partitioned into a separate user with its own permissions. It will be added to group ‘video’ to allow use of HDMI audio." 8 60
 	adduser mopidy video || error $? "Error adding user ‘mopidy’"
 }
 
