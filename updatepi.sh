@@ -47,7 +47,8 @@ update() {
     apt-get -qy remove apt-listchanges >/dev/null 2>&1 || error $? "Error removing apt-listchanges"
     apt -qy update >/dev/null 2>&1 || error $? "Error running apt update"
     dialog --title "Upgrading software" --infobox "Running ‘apt dist-upgrade’ to bring libraries up-to-date. This step will very likely take some time and you could be shown prompts from updating software." 8 60
-    apt -qy dist-upgrade >/dev/null 2>&1 || apt -qy dist-upgrade --fix-missing >/dev/null 2>&1 || apt -qy --fix-broken install >/dev/null 2>&1 || error $? "Error running apt dist-upgrade"
+    sleep 5
+    apt -qy dist-upgrade || apt -qy dist-upgrade --fix-missing || apt -qy --fix-broken install || error $? "Error running apt dist-upgrade"
 }
 
 remove_bad() {
