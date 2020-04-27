@@ -53,8 +53,8 @@ install_mopidy_repo() {
 	apt update || error $? "Error updating apt"
 }
 
-addusers() {
-	dialog --title "Adding user ‘mopidy’" --msgbox "This allows the music to be partitioned into a separate user with its own permissions" 8 60
+usermod() {
+	dialog --title "Adding user ‘mopidy’" --msgbox "This allows the music to be partitioned into a separate user with its own permissions. It will be added to group ‘video’ to allow use of HDMI audio." 8 60
 	adduser mopidy video || error $? "Error adding user ‘mopidy’"
 }
 
@@ -67,7 +67,7 @@ install_packages() {
 welcomemsg
 whoareyou
 install_dialog
-addusers
 install_mopidy_repo
 install_packages
+usermod
 closing
