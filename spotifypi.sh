@@ -67,6 +67,15 @@ install_packages() {
 	install 'mopidy-spotify' 'connects the mopidy backend to Spotify'
 }
 
+credentials() {
+	S_USERNAME=$(dialog --title "Spotify username" --inputbox "Please go to https://www.spotify.com/us/account/set-device-password/ and set a device password. Enter the provided username here." 8 60 2>&1 1>/dev/tty); 
+	S_PASSWORD=$(dialog --title "Spotify password" --passwordbox "Enter the device password you just made here. The text should not display as you type." 8 60 2>&1 1>/dev/tty); 
+	S_ID=$(dialog --title "Mopidy client ID" --inputbox "Now go to https://mopidy.com/ext/spotify/ and log into Spotify. Paste the ‘client_id’ here." 8 60 2>&1 1>/dev/tty); 
+	S_SECRET=$(dialog --title "Mopidy secret" --inputbox "Add the ‘client_secret’ here." 8 60 2>&1 1>/dev/tty); 
+
+	
+}
+
 # the actual code
 run(){
 	welcomemsg

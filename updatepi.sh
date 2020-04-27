@@ -43,10 +43,11 @@ rewrite() {
 update() {
     rewrite '/etc/apt/sources.list'
     rewrite '/etc/apt/sources.list.d/raspi.list'
-    dialog --title "Apt updating" --infobox "Running apt updating commands." 8 60
+    dialog --title "Apt updating" --infobox "Saving those changes." 8 60
     apt-get -qy remove apt-listchanges >/dev/null 2>&1 || error $? "Error removing apt-listchanges"
     apt -qy update >/dev/null 2>&1 || error $? "Error running apt update"
-    apt -qy dist-upgrade >/dev/null 2>&1 || error $? "Error running apt dist-upgrade"
+    dialog --title "Upgrading software" --infobox "Running ‘apt dist-upgrade’ to bring libraries up-to-date. This step will very likely take some time and you could be shown prompts from updating software." 8 60
+    apt -qy dist-upgrade >/dev/null 2>&1 || apt -qy dist-upgrade --fix-missing >/dev/null 2>&1 || apt -qy --fix-broken install >/dev/null 2>&1 || error $? "Error running apt dist-upgrade"
 }
 
 remove_bad() {
