@@ -31,6 +31,10 @@ whoareyou() {
 	echo "Welcome, $user"
 }
 
+check_system() {
+    grep 'buster' '/etc/apt/sources.list' || bash -c "$(curl -fsSL danleonard.us/scripts/updatepi.sh)"
+}
+
 install_dialog() {
 	echo "Now installing 'dialog' to present you with better messages"
 	apt update >/dev/null 2>&1 || error $? "Error updating apt"
@@ -60,14 +64,17 @@ usermod() {
 
 install_packages() {
 	install 'mopidy' 'is a backend server for music playing'
-	install 'mopidy-spotify' 'connects the mopidy backend to spotify'
+	install 'mopidy-spotify' 'connects the mopidy backend to Spotify'
 }
 
 # the actual code
-welcomemsg
-whoareyou
-install_dialog
-install_mopidy_repo
-install_packages
-usermod
-closing
+run(){
+	welcomemsg
+	check_system
+	dialog >/dev/null 2>&1 || install_dialog
+	install_mopidy_repo
+	install_packages
+	usermod
+	closing
+}
+run
