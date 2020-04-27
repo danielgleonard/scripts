@@ -31,7 +31,7 @@ install_dialog() {
 }
 
 closing() {
-	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should now have up-to-date software.\\n\\n~ Dan" 8 60
+	dialog --title "System updated" --msgbox "Assuming there were no hidden errors, you should now have an up-to-date operating system.\\n\\n~ Dan" 8 60
 }
 
 rewrite() {
