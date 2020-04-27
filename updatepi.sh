@@ -35,7 +35,7 @@ closing() {
 }
 
 rewrite() {
-    dialog --title "Rewriting files" --infobox "Changing the file ‘$1’"
+    dialog --title "Rewriting files" --infobox "Changing the file ‘$1’" 8 60
     sed -i "s/$DIST_OLD/$DIST_NEW/g" "$1" || error $? "Error rewriting $1"
     sleep 2
 }
@@ -50,7 +50,7 @@ update() {
 }
 
 remove_bad() {
-    dialog --title "Purging" --infobox "Removing packages that should be removed"
+    dialog --title "Purging" --infobox "Removing packages that should be removed" 8 60
     apt -qy purge timidity lxmusic gnome-disk-utility deluge-gtk evince wicd wicd-gtk clipit usermode gucharmap gnome-system-tools pavucontrol >/dev/null 2>&1 || error $? "Error purging"
     apt -qy autoremove >/dev/null 2>&1 || error $? "Error running autoremove"
     apt -qy autoclean >/dev/null 2>&1 || error $? "Error running autoclean"
