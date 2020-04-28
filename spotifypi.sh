@@ -43,6 +43,7 @@ install_dialog() {
 
 closing() {
 	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up. If it doesn’t seem to work, consult docs.mopidy.com\\n\\n~ Dan" 8 60
+	clear
 }
 
 install () {
@@ -75,16 +76,17 @@ credentials() {
 	S_SECRET=$(dialog --title "Mopidy secret" --inputbox "Add the ‘client_secret’ here." 8 60 2>&1 1>/dev/tty); 
 
 	CONFIG=$(echo -e "[spotify]\nusername = $S_USERNAME\npassword = $S_PASSWORD\nclient_id = $S_ID\nclient_secret = $S_SECRET\n")
-	dialog --title "Saving configuration" --msgbox "The following will be appended to /etc/mopidy/mopidy.conf:\n$CONFIG" 8 60
+	dialog --title "Saving configuration" --msgbox "The passwords will be appended to /etc/mopidy/mopidy.conf" 8 60
 	echo -e "$CONFIG" >> /etc/mopidy/mopidy.conf
 }
 
 service() {
 	dialog --title "Running as service" --infobox "Enabling mopidy as a system service so it no longer needs to be manually operated." 8 60
-	systemctl enable mopidy
-	systemctl start mopidy
+	systemctl enable mopidy >/dev/null 2>&1 || error $? "Error enabling mopidy service"
+	systemctl start mopidy >/dev/null 2>&1 || error $? "Error starting mopidy service"
 	sleep 5
-	systemctl status mopidy
+	clear
+	systemctl status mopidy || error $? "Error getting mopidy service status"
 	sleep 5
 }
 
