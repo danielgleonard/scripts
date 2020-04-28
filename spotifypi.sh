@@ -42,12 +42,12 @@ install_dialog() {
 }
 
 closing() {
-	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up.\\n\\n~ Dan" 8 60
+	dialog --title "All done" --msgbox "Assuming there were no hidden errors in the install, you should be all set up. If it doesn’t seem to work, consult docs.mopidy.com\\n\\n~ Dan" 8 60
 }
 
 install () {
 	dialog --title "Installing ‘$1’" --infobox "The package ‘$1’ $2" 8 60
-	aptitude -y install "$1" >/dev/null 2>&1 || error $? "Error installing $1"
+	aptitude -qy install "$1" >/dev/null 2>&1 || error $? "Error installing $1"
 }
 
 install_mopidy_repo() {
@@ -60,6 +60,7 @@ install_mopidy_repo() {
 usermod() {
 	dialog --title "Adding user ‘mopidy’" --infobox "This allows the music to be partitioned into a separate user with its own permissions. It will be added to group ‘video’ to allow use of HDMI audio." 8 60
 	adduser mopidy video >/dev/null 2>&1 || error $? "Error adding user ‘mopidy’"
+	sleep 5
 }
 
 install_packages() {
@@ -73,7 +74,18 @@ credentials() {
 	S_ID=$(dialog --title "Mopidy client ID" --inputbox "Now go to https://mopidy.com/ext/spotify/ and log into Spotify. Paste the ‘client_id’ here." 8 60 2>&1 1>/dev/tty); 
 	S_SECRET=$(dialog --title "Mopidy secret" --inputbox "Add the ‘client_secret’ here." 8 60 2>&1 1>/dev/tty); 
 
-	
+	CONFIG=$(echo -e "[spotify]\nusername = $S_USERNAME\npassword = $S_PASSWORD\nclient_id = $S_ID\nclient_secret = $S_SECRET\n")
+	dialog --title "Saving configuration" --msgbox "The following will be appended to /etc/mopidy/mopidy.conf:\n$CONFIG" 8 60
+	echo -e "$CONFIG" >> /etc/mopidy/mopidy.conf
+}
+
+service() {
+	dialog --title "Running as service" --infobox "Enabling mopidy as a system service so it no longer needs to be manually operated." 8 60
+	systemctl enable mopidy
+	systemctl start mopidy
+	sleep 5
+	systemctl status mopidy
+	sleep 5
 }
 
 # the actual code
@@ -84,6 +96,8 @@ run(){
 	install_mopidy_repo
 	install_packages
 	usermod
+	credentials
+	service
 	closing
 }
 run
