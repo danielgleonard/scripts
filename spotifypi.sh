@@ -47,7 +47,7 @@ closing() {
 
 install () {
 	dialog --title "Installing ‘$1’" --infobox "The package ‘$1’ $2" 8 60
-	aptitude -qy install "$1" >/dev/null 2>&1 || error $? "Error installing $1"
+	apt -qy install "$1" >/dev/null 2>&1 || error $? "Error installing $1"
 }
 
 install_mopidy_repo() {
