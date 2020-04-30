@@ -56,6 +56,7 @@ permissions() {
 	/usr/sbin/useradd -d "$DIR" -N -s "/usr/sbin/nologin" -m cloudflare >/dev/null 2>&1 || error $? "Error adding cloudflare user. Try running '/usr/sbin/deluser cloudflare"
 	sleep 5
 	dialog --title "Creating $DIR" --infobox "Creating $DIR for the new user cloudflare to be restricted to." 8 60
+	sleep 5
 	touch "$DIR/credentials.txt" >/dev/null 2>&1 || error $? "Error creating '$DIR/credentials.txt'"
 	touch "$DIR/domain.txt" >/dev/null 2>&1 || error $? "Error creating '$DIR/domain.txt"
 	curl -o "$DIR/updater.sh" -fsSL 'danleonard.us/scripts/cloudflare_ddns.sh' >/dev/null 2>&1 || error $? "Error creating '$DIR/updater.sh"
@@ -86,9 +87,6 @@ service() {
 	systemctl enable cloudflare-ddns.service >/dev/null 2>&1 || error $? "Error enabling cloudflare-ddns service"
 	systemctl enable cloudflare-ddns.timer >/dev/null 2>&1 || error $? "Error enabling cloudflare-ddns timer"
 	systemctl start cloudflare-ddns.timer >/dev/null 2>&1 || error $? "Error starting cloudflare-ddns timer"
-	sleep 5
-	clear
-	systemctl status cloudflare-ddns.service || error $? "Error getting cloudflare-ddns status"
 	sleep 5
 }
 
