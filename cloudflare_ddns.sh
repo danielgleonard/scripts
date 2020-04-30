@@ -2,7 +2,6 @@
 
 error() {>&2 printf "ERROR:\\t%s\\n" "$2"}
 
-run() {
 # Files
 # FILE_LOG='/var/cloudflare_ddns/addresses.log.csv'
 
@@ -73,5 +72,3 @@ if $CHANGED_IPV4 || $CHANGED_IPV6; then
 
     echo "$LOG"
 fi
-}
-run

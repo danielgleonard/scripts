@@ -82,7 +82,7 @@ credentials() {
 
 service() {
 	dialog --title "Running as service" --infobox "Enabling cloudflare-ddns as a system service so it no longer needs to be manually operated." 12 60
-	printf "[Unit]\\nDescription=Updates Cloudflare DNS with the IP address of this machine\\nAfter=network-online.target\\nWants=network-online.target\\n\\n[Service]\\nUser=cloudflare\\nType=oneshot\\nExecStart=$DIR/updater.sh\\nWorkingDirectory=$DIR\\n\\n[Install]\\nWantedBy=multi-user.target\\n" > /etc/systemd/system/cloudflare-ddns.service || error $? "Error writing /etc/systemd/system/cloudflare-ddns.service"
+	printf "[Unit]\\nDescription=Cloudflare DNS Updater\\nAfter=network-online.target\\nWants=network-online.target\\n\\n[Service]\\nUser=cloudflare\\nType=oneshot\\nExecStart=$DIR/updater.sh\\nWorkingDirectory=$DIR\\n\\n[Install]\\nWantedBy=multi-user.target\\n" > /etc/systemd/system/cloudflare-ddns.service || error $? "Error writing /etc/systemd/system/cloudflare-ddns.service"
 	printf "[Unit]\\nDescription=Update Cloudflare every minute\\nRequires=cloudflare-ddns.service\\n\\n[Timer]\\nUnit=cloudflare-ddns.service\\nOnUnitInactiveSec=1m\\n\\n[Install]\\nWantedBy=timers.target\\n" > /etc/systemd/system/cloudflare-ddns.timer || error $? "Error writing /etc/systemd/system/cloudflare-ddns.timer"
 	systemctl enable cloudflare-ddns.service >/dev/null 2>&1 || error $? "Error enabling cloudflare-ddns service"
 	systemctl enable cloudflare-ddns.timer >/dev/null 2>&1 || error $? "Error enabling cloudflare-ddns timer"
