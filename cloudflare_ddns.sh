@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+run() {
 # Files
 # FILE_LOG='/var/cloudflare_ddns/addresses.log.csv'
 
@@ -70,4 +71,5 @@ if $CHANGED_IPV4 || $CHANGED_IPV6; then
 
     echo "$LOG"
 fi
-
+}
+run
