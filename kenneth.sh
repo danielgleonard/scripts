@@ -8,7 +8,7 @@ roottest() {
 	fi
 }
 
-error() { clear; printf "ERROR:\\n%s\\n569o9Please report this error message to Dan.\\n" "$2"; exit $1;}
+error() { clear; printf "ERROR:\\n%s\\nPlease report this error message to Dan.\\n" "$2"; exit $1;}
 
 welcomemsg() { \
 	echo "This is going to set up direct file access over HTTPS."
