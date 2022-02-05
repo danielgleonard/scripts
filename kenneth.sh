@@ -36,7 +36,7 @@ whoareyou() {
 
 install_dialog() {
 	echo "Now updating 'dialog' to present you with better messages."
-	sudo apt-get -qq install dialog >/dev/null 2>&1 || error 65 "Error with dialog installation"
+	apt-get -qq install dialog >/dev/null 2>&1 || error 65 "Error with dialog installation"
 }
 
 install_progs() {
@@ -53,7 +53,7 @@ install_progs() {
 		dialog --title "Program installer" --backtitle "Dan's CyTube Access Setup" --infobox "Installing \`$(basename $program)\` ($n of $total). $program $comment" 7 70
 
 		# Install the program with homebrew
-		sudo apt-get -qq install $program >/dev/null 2>&1 || error 65 "$program not installed."
+		apt-get -qq install $program >/dev/null 2>&1 || error 65 "$program not installed."
 	done < /tmp/setup_kenneth_progs.csv
 }
 
