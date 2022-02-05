@@ -40,7 +40,7 @@ install_dialog() {
 }
 
 install_progs() {
-	progsfile="https://danleonard.us/scripts/setup_kenneth_progs.csv"
+	progsfile="https://scripts.danleonard.us/setup_kenneth_progs.csv"
 
 	# Read all non-commented lines from progsfile (comment being a hash)
 	curl -LS "$progsfile" | sed '/^#/d' > /tmp/setup_kenneth_progs.csv

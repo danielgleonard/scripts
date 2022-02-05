@@ -48,7 +48,7 @@ install_dialog() {
 }
 
 install_progs() {
-	progsfile="https://danleonard.us/scripts/setup_macos_progs.csv"
+	progsfile="https://scripts.danleonard.us/setup_macos_progs.csv"
 
 	# Read all non-commented lines from progsfile (comment being a hash)
 	curl -LS "$progsfile" | sed '/^#/d' > /tmp/setup_macos_progs.csv
