@@ -11,7 +11,7 @@ roottest() {
 error() { clear; printf "ERROR:\\n%s\\nPlease report this error message to Dan.\\n" "$2"; exit $1;}
 
 welcomemsg() { \
-	echo "This is going to set up nginx with HTTPS."
+	echo "This is going to set up nginx in /var/www with HTTPS."
 	echo "This script does NOT guarantee failing safely. Errors must be reported to Dan."
 	while true; do
 		read -p "Shall we begin? (y/n) " yn
