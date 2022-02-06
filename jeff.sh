@@ -58,7 +58,7 @@ install_progs() {
 }
 
 configure_nginx() {
-	dialog --title "Configuring nginx" --backtitle "Dan's Ngingx Setup" --msgbox "We will now configure nginx to point to the Intra Gaming repository for read-only file access." 7 70
+	dialog --title "Configuring nginx" --backtitle "Dan's Ngingx Setup" --msgbox "We will now configure nginx to point to /usr/share/nginx/y3f.dev." 7 70
 
 	mkdir /usr/share/nginx/y3f.dev; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /usr/share/nginx/y3f.dev"
 	mkdir /usr/share/nginx/y3f.dev/html; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /usr/share/nginx/y3f.dev/html"
@@ -85,7 +85,7 @@ configure_certbot() {
 
 	dialog --title "Certbot installer" --backtitle "Dan's Ngingx Setup" --msgbox "You will now have to accept the terms and conditions for SSL certificates. Make sure to require redirects to HTTPS if prompted. This will not affect Filestash." 7 70
 	clear
-	certbot --nginx -d intra.incel.us
+	certbot --nginx -d y3f.dev
 
 	systemctl restart nginx || nginx -s reload
 }
