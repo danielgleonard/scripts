@@ -58,15 +58,15 @@ install_progs() {
 }
 
 configure_nginx() {
-	dialog --title "Configuring nginx" --backtitle "Dan's Ngingx Setup" --msgbox "We will now configure nginx to point to /usr/share/nginx/y3f.dev." 7 70
+	dialog --title "Configuring nginx" --backtitle "Dan's Ngingx Setup" --msgbox "We will now configure nginx to point to /var/www/y3f.dev." 7 70
 
-	mkdir /usr/share/nginx/y3f.dev; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /usr/share/nginx/y3f.dev"
-	mkdir /usr/share/nginx/y3f.dev/html; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /usr/share/nginx/y3f.dev/html"
-	mkdir /usr/share/nginx/y3f.dev/html/assets; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /usr/share/nginx/y3f.dev/html/assets"
-	mkdir /usr/share/nginx/y3f.dev/html/assets/css; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /usr/share/nginx/y3f.dev/html/assets/css"
+	mkdir /var/www/y3f.dev; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /var/www/y3f.dev"
+	mkdir /var/www/y3f.dev/html; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /var/www/y3f.dev/html"
+	mkdir /var/www/y3f.dev/html/assets; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /var/www/y3f.dev/html/assets"
+	mkdir /var/www/y3f.dev/html/assets/css; >/dev/null 2>&1 || error $? "Error configuring nginx.\nmkdir /var/www/y3f.dev/html/assets/css"
 
-	curl -fsSL "scripts.danleonard.us/jeff.nginx-error.xhtml" -o "/usr/share/nginx/html/error.xhtml" >/dev/null 2>&1 || error $? "Error configuring nginx.\nscripts.danleonard.us/jeff.nginx-error.xhtml"
-	curl -fsSL "scripts.danleonard.us/jeff.nginx-default-style.css" -o "/usr/share/nginx/y3f.dev/html/assets/css/default-style.css" >/dev/null 2>&1 || error $? "Error configuring nginx.\nscripts.danleonard.us/jeff.nginx-default-style.css"
+	curl -fsSL "scripts.danleonard.us/jeff.nginx-error.xhtml" -o "/var/www/html/error.xhtml" >/dev/null 2>&1 || error $? "Error configuring nginx.\nscripts.danleonard.us/jeff.nginx-error.xhtml"
+	curl -fsSL "scripts.danleonard.us/jeff.nginx-default-style.css" -o "/var/www/y3f.dev/html/assets/css/default-style.css" >/dev/null 2>&1 || error $? "Error configuring nginx.\nscripts.danleonard.us/jeff.nginx-default-style.css"
 	curl -fsSL "scripts.danleonard.us/jeff.nginx-errorpages.inc" -o "/etc/nginx/errorpages.inc" >/dev/null 2>&1 || error $? "Error configuring nginx.\nscripts.danleonard.us/jeff.nginx-errorpages.inc"
 	curl -fsSL "scripts.danleonard.us/jeff.nginx.conf" -o "/etc/nginx/nginx.conf" >/dev/null 2>&1 || error $? "Error configuring nginx.\nscripts.danleonard.us/jeff.nginx.conf"
 	curl -fsSL "scripts.danleonard.us/jeff.nginx-y3f.dev.conf" -o "/etc/nginx/conf.d/y3f.dev" >/dev/null 2>&1 || error $? "Error configuring nginx.\nscripts.danleonard.us/jeff.nginx-y3f.dev.conf"
