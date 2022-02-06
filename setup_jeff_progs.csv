@@ -1,0 +1,6 @@
+#NAME IN REPO,PURPOSE
+nginx,is the web server that will host the videos
+snapd,is a package manager that will handle HTTPS certificates
+neofetch,will read the status (RAM, etc) of your machine
+fish,is a modern shell that provides autocompletion but is not backwards-compatible with the bourne shell
+jq,is best described as "like sed for JSON data"
