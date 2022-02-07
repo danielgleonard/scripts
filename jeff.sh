@@ -86,11 +86,10 @@ closing() {
 main() {
 	roottest
 	welcomemsg
-	install_homebrew
 	install_dialog
 	install_progs
-	change_shell
-	dotfiles
+	configure_nginx
+	configure_certbot
 	closing
 
 	clear
