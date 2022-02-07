@@ -4,3 +4,6 @@ snapd,is a package manager that will handle HTTPS certificates
 neofetch,will read the status (RAM, etc) of your machine
 fish,is a modern shell that provides autocompletion but is not backwards-compatible with the bourne shell
 jq,is best described as "like sed for JSON data"
+python3,is python
+python3-venv,is python virtual environments
+libaugeas0,is some library you apparently need

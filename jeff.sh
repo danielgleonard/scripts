@@ -66,17 +66,20 @@ configure_nginx() {
 configure_certbot() {
 	dialog --title "Certbot installer" --backtitle "Dan's Ngingx Setup" --infobox "Installing Certbot. Certbot automatically adds HTTPS certificates to nginx servers." 7 70
 
-	snap install core >/dev/null 2>&1 || error 65 "Error installing snapd core."
-	snap refresh core >/dev/null 2>&1 || error 65 "Error refreshing snapd core."
-	snap install --classic certbot >/dev/null 2>&1  || error 65 "Error installing certbot from snapd."
+	python3 -m venv /opt/certbot/ || error $? "Error making a Python virtual environment."
+	/opt/certbot/bin/pip install --upgrade pip || error $? "Error upgrading Python pip."
 
-	ln -s /snap/bin/certbot /usr/bin/certbot >/dev/null 2>&1 || error $? "Error linking certbot to bin."
+	/opt/certbot/bin/pip install certbot certbot-nginx || error $? "Error installing certbot from pip."
+
+	ln -s /opt/certbot/bin/certbot /usr/bin/certbot || error $? "Error preparing the certbot command."
 
 	dialog --title "Certbot installer" --backtitle "Dan's Ngingx Setup" --msgbox "You will now have to accept the terms and conditions for SSL certificates. Make sure to require redirects to HTTPS if prompted. This will not affect Filestash." 7 70
 	clear
 	certbot --nginx -d y3f.dev
 
-	systemctl restart nginx || nginx -s reload
+	echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; time.sleep(random.random() * 3600)' && sudo certbot renew -q" | sudo tee -a /etc/crontab > /dev/null
+
+	nginx -s reload
 }
 
 closing() {
