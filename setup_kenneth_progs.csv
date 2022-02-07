@@ -1,4 +1,0 @@
-#NAME IN REPO,PURPOSE
-nginx,is the web server that will host the videos
-snapd,is a package manager that will handle HTTPS certificates
-neofetch,will read the status (RAM, etc) of your machine
