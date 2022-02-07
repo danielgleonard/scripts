@@ -5,5 +5,5 @@ location = /error.xhtml {
         ssi_types application/xhtml+xml;
         internal;
         auth_basic off;
-        root /usr/share/nginx/html;
+        root /var/www/html;
 }

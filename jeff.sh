@@ -28,6 +28,23 @@ install_dialog() {
 	apt-get -qq install dialog >/dev/null 2>&1 || error 65 "Error with dialog installation"
 }
 
+upgrade() {
+	dialog --title "System upgrade" --backtitle "Dan's Ngingx Setup" --msgbox "Performing a full system upgrade." 7 70
+	apt-get -qq update >/dev/null 2>&1 || error $? "Error running apt update."
+	clear
+	apt-get -qq upgrade || error $? "Error running apt upgrade."
+}
+
+sshd() {
+	dialog --title "sshd settings" --backtitle "Dan's Nginx Setup" --msgbox "Configuring sshd to disable passwords and require public key authentication." 7 70
+	sed "s/PubkeyAuthentication no/PubkeyAuthentication yes/g" -i /etc/ssh/sshd_config || error $? "Error enabling pubkey authentication"
+	sed "s/PasswordAuthentication yes/PasswordAuthentication no/g" -i /etc/ssh/sshd_config || error $? "Error disabling password authentication"
+	sed "s/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/g" -i /etc/ssh/sshd_config || error $? "Error disabling keyboard authentication"
+	sed "/PubkeyAuthentication yes/s/^#//" -i /etc/ssh/sshd_config || error $? "Error uncommenting pubkey authentication"
+	sed "/PasswordAuthentication no/s/^#//" -i /etc/ssh/sshd_config || error $? "Error uncommenting password authentication"
+	sed "/ChallengeResponseAuthentication no/s/^#//" -i /etc/ssh/sshd_config || error $? "Error uncommenting keyboard authentication"
+}
+
 install_progs() {
 	progsfile="https://scripts.danleonard.us/setup_jeff_progs.csv"
 
@@ -90,6 +107,8 @@ main() {
 	roottest
 	welcomemsg
 	install_dialog
+	upgrade
+	sshd
 	install_progs
 	configure_nginx
 	configure_certbot
