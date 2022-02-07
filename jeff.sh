@@ -23,17 +23,6 @@ welcomemsg() { \
 	done
 }
 
-whoareyou() {
-	PS3='Who are you? Please enter a number: '
-	options=$(users)
-	select opt in "${options[@]}"
-	do
-		users | grep $opt >/dev/null 2>&1 && user=$opt && break
-	done
-	echo "Welcome, $user"
-}
-
-
 install_dialog() {
 	echo "Now updating 'dialog' to present you with better messages."
 	apt-get -qq install dialog >/dev/null 2>&1 || error 65 "Error with dialog installation"
@@ -97,7 +86,6 @@ closing() {
 main() {
 	roottest
 	welcomemsg
-	whoareyou
 	install_homebrew
 	install_dialog
 	install_progs
@@ -106,7 +94,7 @@ main() {
 	closing
 
 	clear
-	sudo -u $user neofetch
+	neofetch
 }
 
 main
