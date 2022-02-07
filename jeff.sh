@@ -65,7 +65,7 @@ install_progs() {
 
 add_jeff() {
 	if [ ! -d "/home/jeff/.ssh" ]; then
-		mkdir "/home/jeff.ssh" || error $? "Error making .ssh directory in /home/jeff."
+		mkdir "/home/jeff/.ssh" || error $? "Error making .ssh directory in /home/jeff."
 	fi
 	if [ ! -f "/home/jeff/.ssh/authorized_keys" ]; then
 		printf "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwGJ9J3kwMiusr7B19zgbay/cSiiq7aQ5dceG9JahC2EGtgGOhRlXZl19TgZzMsKKC46t7E8bOQfyX5taUoHewKEqF4x12hSHvddqrGST3pmrwgedX5LZJYd7aMS0aP3sXypr9YF5RCUIDucbX2QWAQBakCLilcCsXc2/p+MwI2Evb4w022mrT7zLT+93wC7s5UsIVezp9HY4sHd+mv2IyfgSPfhJFtkujK0q6s0BUnPi5CHcBXoRRcNtNGdvdRwbKpTr6IUC6aPIV5Ij4AWNCMjnKTpg1b3fYV+jaYNyGhDQyVlzR9kylu7+98YNi/RTdHxIgapnLLv9pqIvoRJOwvXSXj/jq6Q7tN/HQog/PinsG6UK99Kms5iWwVJl5H0dnBTGkXixul2U9dPQVpik3tzUgs9ZHRK5l5syarWl0ibLdwx+e7X1n/UCFbj49f5Zo4okMWfJnL0BsIB9gmjk418BXHImBMJCwuPZRWvZp0GRQOrldKUjhqzqCACtB+uk= jeffv@DESKTOP-C7J071R\n" > "/home/jeff/.ssh/authorized_keys" || error $? "Error writing public key to /home/jeff/.ssh."
