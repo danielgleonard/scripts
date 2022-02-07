@@ -133,7 +133,7 @@ main() {
 	roottest
 	welcomemsg
 	install_dialog
-	upgrade_system
+	# upgrade_system
 	sshd_configure
 	install_progs
 	add_jeff
