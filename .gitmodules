@@ -1,3 +1,0 @@
-[submodule "arch"]
-	path = arch
-	url = git@github.com:danielgleonard/larbs.git
